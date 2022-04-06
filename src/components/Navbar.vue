@@ -17,7 +17,7 @@
 
     <div class="links-responsive">
       <button
-        @click="this.closeResponsiveNavbar"
+        @click="toggleResponsiveNavbar"
         id="close-navbar-responsive"
         class="icon-button"
       >
@@ -31,7 +31,7 @@
       >
     </div>
     <div id="toggle-button">
-      <button @click="openResponsiveNavbar" class="icon-button">
+      <button @click="toggleResponsiveNavbar" class="icon-button">
         <i class="fa fa-bars"></i>
       </button>
     </div>
@@ -50,15 +50,12 @@ export default {
     };
   },
   methods: {
-    openResponsiveNavbar() {
-      const responsiveNavbar = document.querySelector(".links-responsive");
+    toggleResponsiveNavbar() {
+      let responsiveNavbar = document.querySelector(".links-responsive").style;
 
-      return (responsiveNavbar.style.display = "flex");
-    },
-    closeResponsiveNavbar() {
-      const responsiveNavbar = document.querySelector(".links-responsive");
-
-      return (responsiveNavbar.style.display = "none");
+      return responsiveNavbar.display === "flex"
+        ? (responsiveNavbar.display = "none")
+        : (responsiveNavbar.display = "flex");
     },
   },
 };

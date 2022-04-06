@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <Navbar />
-    <router-view />
+    <div id="container">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -28,5 +30,32 @@ export default {
 body {
   font-family: "Open Sans", sans-serif;
   background-color: rgb(33, 33, 33);
+  color: rgb(225, 225, 225);
+}
+
+#container {
+  padding: 50px;
+  margin-inline: 280px;
+}
+
+/* RESPONSIVE */
+
+@media screen and (max-width: 1660px) {
+  #container {
+    margin-inline: 200px;
+  }
+}
+
+@media screen and (max-width: 1300px) {
+  #container {
+    margin-inline: 100px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  #container {
+    margin-inline: 0px;
+    padding: 50px 20px;
+  }
 }
 </style>
