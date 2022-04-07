@@ -31,6 +31,7 @@ body {
   font-family: "Open Sans", sans-serif;
   background-color: rgb(33, 33, 33);
   color: rgb(225, 225, 225);
+  user-select: none;
 }
 
 #container {
