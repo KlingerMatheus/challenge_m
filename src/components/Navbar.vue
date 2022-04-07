@@ -118,7 +118,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.84);
   backdrop-filter: blur(5px);
   z-index: 9999;
 }
