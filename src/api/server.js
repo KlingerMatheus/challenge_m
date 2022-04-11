@@ -17,8 +17,7 @@ app.get('/users', (req, res) => {
         })();
 });
 
-app.get('/register', (req, res) => {
-
+app.post('/register', (req, res) => {
     (async () => {
         const user = req.body;
         res.send(await controller.insertUser(user));

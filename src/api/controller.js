@@ -24,21 +24,21 @@ async function insertUser(user) {
 
     const query = { 
         user :     {sql: 'INSERT INTO users(id, first_name, last_name) VALUES (?, ?, ?);', 
-                    values: [ generateId(), user.firstName, user.lastName]},
+                    values: [ generateId(), user.personalInfo.firstName, user.personalInfo.lastName]},
 
         address:   {sql: 'INSERT INTO addresses(user_id, zip, street, number, neighborhood, city, state, complement) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
                     values: [ generateId(), user.address.zip, user.address.street, user.address.number, user.address.neighborhood, user.address.city, user.address.state, user.address.complement]}
 };
 
     return await conn.query(query.user.sql, query.user.values)    
-    .then(  () => {
-        return  conn.query(query.address.sql, query.address.values);
+    .then( async () => {
+        return await conn.query(query.address.sql, query.address.values);
     })
     .then(() => {
         return {status: 'success'};
     })
-    .catch((err) => {
-        return err;
+    .catch(() => {
+        return {status: 'error'};
     });
 }
 

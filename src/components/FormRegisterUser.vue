@@ -1,5 +1,6 @@
 <template>
   <form id="form-register-user">
+    <LoadingEffect v-show="loaderCycle" />
     <fieldset class="form-group">
       <legend>Personal Info</legend>
       <div class="row">
@@ -133,9 +134,13 @@
         </div>
       </div>
       <div class="row btn-group">
-        <button type="button" @click="registerUser()" class="btn btn-primary">
+        <button
+          type="button"
+          @click="registerUser(userData)"
+          class="btn btn-primary"
+        >
           <i class="btn-icon fas fa-check"></i>
-          <p>Save</p>
+          <p>Register</p>
         </button>
         <button type="button" @click="resetForm()" class="btn btn-danger">
           <i class="btn-icon fas fa-eraser"></i>
@@ -147,12 +152,17 @@
 </template>
 
 <script>
-const axios = require("axios").default;
+import { http } from "../api/config";
+import LoadingEffect from "./LoadingEffect.vue";
 
 export default {
   name: "FormRegisterUser",
+  components: {
+    LoadingEffect,
+  },
   data: () => {
     return {
+      loaderCycle: false,
       userData: {
         personalInfo: {
           firstName: "",
@@ -188,6 +198,7 @@ export default {
       return ADDRESS;
     },
     async fillFormAddress() {
+      this.loaderCycle = true;
       if (this.userData.address.zip.length == 8) {
         const ADDRESS = await this.fetchAddressAPI();
 
@@ -205,6 +216,7 @@ export default {
           document.querySelector("#number").disabled = false;
         }
       }
+      this.loaderCycle = false;
     },
     enableEmptyAddressInputs(ADDRESS) {
       ADDRESS.logradouro === ""
@@ -224,18 +236,20 @@ export default {
       document.querySelector("#neighborhood").disabled = true;
       document.querySelector("#complement").disabled = true;
     },
-    registerUser() {
-      if (this.userData.address.zip.length < 8) {
-        return alert("ZIP Code must have exatcly 8 numeric characters.");
-      }
-
-      axios
-        .get("http://localhost:5500/users")
+    async registerUser() {
+      this.loaderCycle = true;
+      return await http
+        .post("register", this.userData)
         .then((response) => {
-          console.log(response);
+          if (response.data.status === "success") {
+            // Insert notification component
+          } else if (response.data.status === "error") {
+            // Insert notification component
+          }
         })
-        .catch((err) => {
-          console.log(err);
+        .then(() => {
+          this.resetForm();
+          this.loaderCycle = false;
         });
     },
     resetForm() {
@@ -258,6 +272,9 @@ export default {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .row {

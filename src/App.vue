@@ -25,6 +25,7 @@ export default {
   margin: 0;
   padding: 0;
   border: none;
+  scroll-behavior: smooth;
 }
 
 body {
