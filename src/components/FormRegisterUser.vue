@@ -1,5 +1,5 @@
 <template>
-  <form action="" id="form-register-user">
+  <form id="form-register-user">
     <fieldset class="form-group">
       <legend>Personal Info</legend>
       <div class="row">
@@ -133,11 +133,11 @@
         </div>
       </div>
       <div class="row btn-group">
-        <button @click="registerUser()" class="btn btn-primary">
+        <button type="button" @click="registerUser()" class="btn btn-primary">
           <i class="btn-icon fas fa-check"></i>
           <p>Save</p>
         </button>
-        <button @click="resetForm()" class="btn btn-danger">
+        <button type="button" @click="resetForm()" class="btn btn-danger">
           <i class="btn-icon fas fa-eraser"></i>
           <p>Reset</p>
         </button>
@@ -147,6 +147,8 @@
 </template>
 
 <script>
+const axios = require("axios").default;
+
 export default {
   name: "FormRegisterUser",
   data: () => {
@@ -226,6 +228,15 @@ export default {
       if (this.userData.address.zip.length < 8) {
         return alert("ZIP Code must have exatcly 8 numeric characters.");
       }
+
+      axios
+        .get("http://localhost:5500/users")
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     resetForm() {
       this.userData.personalInfo.firstName = "";
