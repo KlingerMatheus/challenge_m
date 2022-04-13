@@ -46,7 +46,6 @@ export default {
   animation: spin 1s linear infinite;
 }
 
-/* we will explain what these classes do next! */
 .v-enter-active,
 .v-leave-active {
   transition: opacity 1s ease-in-out;

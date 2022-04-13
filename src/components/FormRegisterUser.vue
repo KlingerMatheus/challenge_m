@@ -1,5 +1,11 @@
 <template>
   <form action="#" id="form-register-user">
+    <Notification
+      v-if="notification.show"
+      :title="notification.title"
+      :message="notification.message"
+      :style-box="notification.style"
+    />
     <LoadingEffect v-show="loaderCycle" />
     <fieldset class="form-group">
       <legend>Personal Info</legend>
@@ -156,15 +162,23 @@
 import { http } from "../api/config";
 import LoadingEffect from "./LoadingEffect.vue";
 import formValidator from "../resources/formValidations";
+import Notification from "./Notification.vue";
 
 export default {
   name: "FormRegisterUser",
   components: {
     LoadingEffect,
+    Notification,
   },
   data: () => {
     return {
       loaderCycle: false,
+      notification: {
+        title: "",
+        message: "",
+        show: false,
+        style: "",
+      },
       userData: {
         personalInfo: {
           firstName: "",
@@ -183,6 +197,16 @@ export default {
     };
   },
   methods: {
+    setNotification(title, message, style) {
+      this.notification.title = title;
+      this.notification.style = style;
+      this.notification.message = message;
+
+      this.notification.show = true;
+      setTimeout(() => {
+        this.notification.show = false;
+      }, 5000);
+    },
     async fetchAddressAPI() {
       const ADDRESS = await fetch(
         `https://viacep.com.br/ws/${this.userData.address.zip}/json/`,
@@ -201,11 +225,18 @@ export default {
     },
     async fillFormAddress() {
       this.loaderCycle = true;
-      if (this.userData.address.zip.length == 8) {
+      if (
+        this.userData.address.zip.length == 8 &&
+        formValidator.isZipValid(this.userData.address.zip)
+      ) {
         const ADDRESS = await this.fetchAddressAPI();
 
         if (ADDRESS.erro) {
-          alert("This ZIP Code doesn't exist.");
+          this.setNotification(
+            "Alert",
+            "This ZIP Code doesn't exist.",
+            "warning"
+          );
           this.userData.address.zip = "";
         } else {
           this.userData.address.street = ADDRESS.logradouro;
@@ -217,6 +248,13 @@ export default {
           this.enableEmptyAddressInputs(ADDRESS);
           document.querySelector("#number").disabled = false;
         }
+      } else {
+        this.loaderCycle = false;
+        return this.setNotification(
+          "Alert",
+          "ZIP Code must have exact 8 NUMBERS!",
+          "warning"
+        );
       }
       this.loaderCycle = false;
     },
@@ -249,18 +287,35 @@ export default {
       return await http
         .post("register", this.userData)
         .then((response) => {
-          if (response.data.status === "SUCCESS") {
-            // Insert notification component
-            return alert("User registered succesfully!");
-          } else if (response.data.status === "ERROR") {
-            // Insert notification component
-            return alert("Register failed.");
-          }
-        })
-        .then(() => {
           this.resetForm();
           this.disableAddressInputs();
           this.loaderCycle = false;
+
+          if (response.data.status === "SUCCESS") {
+            return "success";
+          } else if (response.data.status === "ERROR") {
+            return "error";
+          }
+        })
+        .then((result) => {
+          switch (result) {
+            case "success": {
+              this.setNotification(
+                "Success!",
+                "User registered succesfully.",
+                "success"
+              );
+              break;
+            }
+            case "error": {
+              this.setNotification(
+                "Failed!",
+                "Failure on registering user.",
+                "danger"
+              );
+              break;
+            }
+          }
         })
         .catch((error) => {
           alert("Occured an error! Contact the support.");
