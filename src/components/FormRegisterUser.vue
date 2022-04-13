@@ -1,5 +1,5 @@
 <template>
-  <form id="form-register-user">
+  <form action="#" id="form-register-user">
     <LoadingEffect v-show="loaderCycle" />
     <fieldset class="form-group">
       <legend>Personal Info</legend>
@@ -47,6 +47,7 @@
           >
           <div class="btn-group">
             <button
+              type="button"
               class="btn btn-search btn-primary"
               @click="fillFormAddress()"
             >
@@ -63,6 +64,7 @@
             placeholder="Type here..."
             autocomplete="off"
             class="input-text"
+            maxlength="50"
             id="street"
             v-model="userData.address.street"
             disabled
@@ -71,8 +73,9 @@
         <div class="input-group">
           <label for="number">Number</label>
           <input
-            type="number"
+            type="text"
             placeholder="Type here..."
+            maxlength="6"
             autocomplete="off"
             class="input-text"
             id="number"
@@ -87,6 +90,7 @@
             placeholder="Type here..."
             autocomplete="off"
             class="input-text"
+            maxlength="50"
             id="neighborhood"
             v-model="userData.address.neighborhood"
             disabled
@@ -127,6 +131,7 @@
             placeholder="Type here..."
             autocomplete="off"
             class="input-text"
+            maxlength="50"
             id="complement"
             v-model="userData.address.complement"
             disabled
@@ -134,11 +139,7 @@
         </div>
       </div>
       <div class="row btn-group">
-        <button
-          type="button"
-          @click="registerUser(userData)"
-          class="btn btn-primary"
-        >
+        <button type="button" @click="registerUser()" class="btn btn-primary">
           <i class="btn-icon fas fa-check"></i>
           <p>Register</p>
         </button>
@@ -154,6 +155,7 @@
 <script>
 import { http } from "../api/config";
 import LoadingEffect from "./LoadingEffect.vue";
+import formValidator from "../resources/formValidations";
 
 export default {
   name: "FormRegisterUser",
@@ -236,21 +238,48 @@ export default {
       document.querySelector("#neighborhood").disabled = true;
       document.querySelector("#complement").disabled = true;
     },
-    async registerUser() {
+    registerUser() {
+      return this.formValidation()
+        ? alert("Error! Check if you filled the form correctly.")
+        : this.insertUser();
+    },
+    async insertUser() {
       this.loaderCycle = true;
+
       return await http
         .post("register", this.userData)
         .then((response) => {
-          if (response.data.status === "success") {
+          if (response.data.status === "SUCCESS") {
             // Insert notification component
-          } else if (response.data.status === "error") {
+            return alert("User registered succesfully!");
+          } else if (response.data.status === "ERROR") {
             // Insert notification component
+            return alert("Register failed.");
           }
         })
         .then(() => {
           this.resetForm();
+          this.disableAddressInputs();
           this.loaderCycle = false;
+        })
+        .catch((error) => {
+          alert("Occured an error! Contact the support.");
+          this.loaderCycle = false;
+          console.log(error);
         });
+    },
+    formValidation() {
+      const PERSONAL_INFO = this.userData.personalInfo;
+
+      if (formValidator.someFieldIsEmpty(this.userData)) return true;
+      if (
+        formValidator.stringContainsNumber(
+          PERSONAL_INFO.firstName.concat(PERSONAL_INFO.lastName)
+        )
+      )
+        return true;
+
+      return false;
     },
     resetForm() {
       this.userData.personalInfo.firstName = "";

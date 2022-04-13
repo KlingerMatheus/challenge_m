@@ -31,7 +31,7 @@ export default {
 
 .loader-container p {
   font-weight: 400;
-  font-size: 18px;
+  font-size: 40px;
 }
 
 .loader {
@@ -49,12 +49,12 @@ export default {
 /* we will explain what these classes do next! */
 .v-enter-active,
 .v-leave-active {
-  transition: opacity 0.75s ease;
+  transition: opacity 1s ease-in-out;
 }
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
+  opacity: 4px;
 }
 
 @keyframes spin {
@@ -63,6 +63,17 @@ export default {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .loader-container {
+    justify-content: left;
+    padding-block: 120px;
+  }
+
+  .loader-container p {
+    font-size: 36px;
   }
 }
 </style>
