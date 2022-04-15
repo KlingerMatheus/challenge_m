@@ -1,11 +1,13 @@
 <template>
   <div class="page-container">
     <PageHeader :title="page.title" :description="page.description" />
+    <ListViewUser />
   </div>
 </template>
 
 <script>
 import PageHeader from "@/components/PageHeader.vue";
+import ListViewUser from "@/components/ListViewUser.vue";
 
 export default {
   name: "ViewUsers",
@@ -18,7 +20,7 @@ export default {
       },
     };
   },
-  components: { PageHeader },
+  components: { PageHeader, ListViewUser },
 };
 </script>
 

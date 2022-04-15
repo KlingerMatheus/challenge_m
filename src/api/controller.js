@@ -3,7 +3,7 @@ const db = require("./db");
 async function getUsers() {
   const conn = await db.connect();
   const query =
-    "SELECT * FROM users JOIN addresses ON users.id = addresses.user_id;";
+    "SELECT u.id, u.first_name, u.last_name, a.zip, a.street, a.number, a.neighborhood, a.city, a.state, a.complement FROM users u JOIN addresses a ON u.id = a.user_id ORDER BY u.first_name;";
 
   return await conn
     .query(query)
