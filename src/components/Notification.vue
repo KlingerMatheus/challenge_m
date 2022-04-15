@@ -19,9 +19,6 @@ export default {
     this.styleBox !== "" ? this.notificationStyle() : false;
   },
   methods: {
-    successMessage() {
-      return document.querySelector();
-    },
     notificationStyle() {
       const styles = ["success", "warning", "danger"];
       let count = 0;
@@ -44,7 +41,7 @@ export default {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999999999999999999999999999;
+  z-index: 999;
 }
 
 .notification .body {
@@ -58,6 +55,7 @@ export default {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
   border-bottom: 4px solid rgba(0, 0, 0, 0.3);
   color: rgba(0, 0, 0, 0.8);
+  z-index: 999;
 }
 
 .success {

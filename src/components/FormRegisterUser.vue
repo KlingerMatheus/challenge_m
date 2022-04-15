@@ -73,7 +73,7 @@
             maxlength="50"
             id="street"
             v-model="userData.address.street"
-            disabled
+            :disabled="isInputDisabled.street"
           />
         </div>
         <div class="input-group">
@@ -86,7 +86,7 @@
             class="input-text"
             id="number"
             v-model="userData.address.number"
-            disabled
+            :disabled="isInputDisabled.number"
           />
         </div>
         <div class="input-group">
@@ -99,7 +99,7 @@
             maxlength="50"
             id="neighborhood"
             v-model="userData.address.neighborhood"
-            disabled
+            :disabled="isInputDisabled.neighborhood"
           />
         </div>
       </div>
@@ -113,7 +113,7 @@
             class="input-text"
             id="city"
             v-model="userData.address.city"
-            disabled
+            :disabled="isInputDisabled.city"
           />
         </div>
         <div class="input-group">
@@ -125,7 +125,7 @@
             class="input-text"
             id="state"
             v-model="userData.address.state"
-            disabled
+            :disabled="isInputDisabled.state"
           />
         </div>
       </div>
@@ -140,7 +140,7 @@
             maxlength="50"
             id="complement"
             v-model="userData.address.complement"
-            disabled
+            :disabled="isInputDisabled.complement"
           />
         </div>
       </div>
@@ -149,7 +149,7 @@
           <i class="btn-icon fas fa-check"></i>
           <p>Register</p>
         </button>
-        <button type="button" @click="resetForm()" class="btn btn-danger">
+        <button type="reset" id="btn-reset" class="btn btn-danger">
           <i class="btn-icon fas fa-eraser"></i>
           <p>Reset</p>
         </button>
@@ -179,6 +179,14 @@ export default {
         show: false,
         style: "",
       },
+      isInputDisabled: {
+        street: true,
+        number: true,
+        neighborhood: true,
+        city: true,
+        state: true,
+        complement: true,
+      },
       userData: {
         personalInfo: {
           firstName: "",
@@ -198,11 +206,13 @@ export default {
   },
   methods: {
     setNotification(title, message, style) {
-      this.notification.title = title;
-      this.notification.style = style;
-      this.notification.message = message;
+      this.notification = {
+        title: title,
+        message: message,
+        style: style,
+        show: true,
+      };
 
-      this.notification.show = true;
       setTimeout(() => {
         this.notification.show = false;
       }, 5000);
@@ -239,14 +249,16 @@ export default {
           );
           this.userData.address.zip = "";
         } else {
-          this.userData.address.street = ADDRESS.logradouro;
-          this.userData.address.neighborhood = ADDRESS.bairro;
-          this.userData.address.city = ADDRESS.localidade;
-          this.userData.address.state = ADDRESS.uf;
-          this.userData.address.complement = ADDRESS.complemento;
+          this.userData.address = {
+            street: ADDRESS.logradouro,
+            neighborhood: ADDRESS.logradouro,
+            city: ADDRESS.logradouro,
+            state: ADDRESS.logradouro,
+            complement: ADDRESS.logradouro,
+          };
 
           this.enableEmptyAddressInputs(ADDRESS);
-          document.querySelector("#number").disabled = false;
+          this.isInputDisabled.number = false;
         }
       } else {
         this.loaderCycle = false;
@@ -260,21 +272,23 @@ export default {
     },
     enableEmptyAddressInputs(ADDRESS) {
       ADDRESS.logradouro === ""
-        ? (document.querySelector("#street").disabled = false)
-        : (document.querySelector("#street").disabled = true);
+        ? (this.isInputDisabled.street = false)
+        : (this.isInputDisabled.street = true);
 
       ADDRESS.bairro === ""
-        ? (document.querySelector("#neighborhood").disabled = false)
-        : (document.querySelector("#neighborhood").disabled = true);
+        ? (this.isInputDisabled.neighborhood = false)
+        : (this.isInputDisabled.neighborhood = true);
 
       ADDRESS.complemento === ""
-        ? (document.querySelector("#complement").disabled = false)
-        : (document.querySelector("#complement").disabled = true);
+        ? (this.isInputDisabled.complement = false)
+        : (this.isInputDisabled.complement = true);
     },
     disableAddressInputs() {
-      document.querySelector("#street").disabled = true;
-      document.querySelector("#neighborhood").disabled = true;
-      document.querySelector("#complement").disabled = true;
+      this.isInputDisabled = {
+        street: true,
+        neighborhood: true,
+        complement: true,
+      };
     },
     registerUser() {
       return this.formValidation()
@@ -337,15 +351,7 @@ export default {
       return false;
     },
     resetForm() {
-      this.userData.personalInfo.firstName = "";
-      this.userData.personalInfo.lastName = "";
-      this.userData.address.zip = "";
-      this.userData.address.street = "";
-      this.userData.address.number = "";
-      this.userData.address.neighborhood = "";
-      this.userData.address.city = "";
-      this.userData.address.state = "";
-      this.userData.address.complement = "";
+      return document.getElementById("btn-reset").click();
     },
   },
 };
