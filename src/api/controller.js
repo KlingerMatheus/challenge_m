@@ -3,13 +3,32 @@ const db = require("./db");
 async function getUsers() {
   const conn = await db.connect();
   const query =
-    "SELECT u.id, u.first_name, u.last_name, a.zip, a.street, a.number, a.neighborhood, a.city, a.state, a.complement FROM users u JOIN addresses a ON u.id = a.user_id ORDER BY u.first_name;";
+    "SELECT u.id, u.first_name, u.last_name, a.city, a.state FROM users u JOIN addresses a ON u.id = a.user_id ORDER BY u.first_name;";
 
   return await conn
     .query(query)
     .then((data) => {
       console.log("Showing all registered users.");
       return data[0];
+    })
+    .catch((err) => {
+      return err;
+    });
+}
+
+async function getSpecificUser(id) {
+  const conn = await db.connect();
+  const query = {
+    sql: "SELECT * FROM users u JOIN addresses a ON u.id = a.user_id WHERE id = ?;",
+    values: [id],
+  };
+
+  return await conn
+    .query(query.sql, query.values)
+    .then((data) => {
+      console.log("Getting data from server...");
+      console.log("Showing USER: " + JSON.stringify(data[0][0].id));
+      return data[0][0];
     })
     .catch((err) => {
       return err;
@@ -68,4 +87,5 @@ function generateId() {
 module.exports = {
   getUsers,
   insertUser,
+  getSpecificUser,
 };

@@ -250,11 +250,12 @@ export default {
           this.userData.address.zip = "";
         } else {
           this.userData.address = {
+            zip: ADDRESS.cep.replace("-", ""),
             street: ADDRESS.logradouro,
-            neighborhood: ADDRESS.logradouro,
-            city: ADDRESS.logradouro,
-            state: ADDRESS.logradouro,
-            complement: ADDRESS.logradouro,
+            neighborhood: ADDRESS.bairro,
+            city: ADDRESS.localidade,
+            state: ADDRESS.uf,
+            complement: ADDRESS.complemento,
           };
 
           this.enableEmptyAddressInputs(ADDRESS);
@@ -285,6 +286,9 @@ export default {
     },
     disableAddressInputs() {
       this.isInputDisabled = {
+        number: true,
+        city: true,
+        state: true,
         street: true,
         neighborhood: true,
         complement: true,
@@ -332,7 +336,11 @@ export default {
           }
         })
         .catch((error) => {
-          alert("Occured an error! Contact the support.");
+          this.setNotification(
+            "Error!",
+            "Occured an error. Please contact the support.",
+            "danger"
+          );
           this.loaderCycle = false;
           console.log(error);
         });
@@ -351,7 +359,21 @@ export default {
       return false;
     },
     resetForm() {
-      return document.getElementById("btn-reset").click();
+      return (this.userData = {
+        personalInfo: {
+          firstName: "",
+          lastName: "",
+        },
+        address: {
+          zip: "",
+          street: "",
+          neighborhood: "",
+          city: "",
+          state: "",
+          complement: "",
+          number: "",
+        },
+      });
     },
   },
 };
@@ -392,12 +414,6 @@ input {
 
 input:focus {
   outline: 3px solid rgba(0, 160, 255, 0.8);
-}
-
-input[type="number"],
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  appearance: none;
 }
 
 .form-group {

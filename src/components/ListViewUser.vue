@@ -1,6 +1,12 @@
 <template>
   <div class="list-container">
+    <ModalDetailsUser
+      v-show="modalIsOpen"
+      @emitCloseModal="closeModal"
+      :user="selectedUser"
+    />
     <table>
+      <LoadingEffect v-show="loaderCycle" />
       <thead>
         <tr>
           <td>#</td>
@@ -19,37 +25,73 @@
           </td>
           <td class="noneAsResponsive">{{ user.city }} - {{ user.state }}</td>
           <td>
-            <button class="btn-details">
+            <button
+              class="btn-details"
+              @click="setUserDataToDetailsModal(user.id)"
+            >
               <i class="fa fa-plus"></i> Details
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <tr v-if="users.length === 0" class="no-users-message">
+      <td>There is no users registered...</td>
+    </tr>
+    <tr v-else-if="users.length === undefined" class="no-users-message">
+      <td>There is an error, contact the support :)</td>
+    </tr>
   </div>
 </template>
 
 <script>
 import { http } from "../api/config";
+import LoadingEffect from "./LoadingEffect.vue";
+import ModalDetailsUser from "./ModalDetailsUser.vue";
 
 export default {
   name: "ListViewUser",
+  components: { LoadingEffect, ModalDetailsUser },
   data: () => {
     return {
-      users: {},
+      selectedUser: {},
+      users: {
+        id: "",
+      },
+      loaderCycle: true,
+      modalIsOpen: false,
     };
   },
   mounted() {
     return this.getUsers();
   },
   methods: {
+    setUserDataToDetailsModal(id) {
+      this.selectedUser = this.getSpecificUser(id);
+      return (this.modalIsOpen = true);
+    },
+    closeModal() {
+      return (this.modalIsOpen = false);
+    },
+    async getSpecificUser(userIndex) {
+      return await http
+        .get(`user/${userIndex}`)
+        .then((fetchUser) => {
+          return (this.selectedUser = fetchUser.data);
+        })
+        .catch((err) => {
+          return console.log(err);
+        });
+    },
     async getUsers() {
       return await http
         .get("users")
         .then((fetchUsers) => {
+          this.loaderCycle = false;
           return (this.users = fetchUsers.data);
         })
         .catch((err) => {
+          this.loaderCycle = false;
           return console.log(err);
         });
     },
@@ -91,8 +133,8 @@ table tbody {
 table tbody tr:nth-child(even) {
   background-image: linear-gradient(
     to left,
-    rgba(255, 255, 255, 0.015),
-    rgba(255, 255, 255, 0.075)
+    rgba(0, 0, 0, 0.015),
+    rgba(0, 0, 0, 0.075)
   );
 }
 
@@ -110,8 +152,17 @@ table td {
   padding: 12px 14px;
 }
 
+.no-users-message {
+  display: flex;
+  justify-content: center;
+  padding-block: 26px;
+  font-weight: bolder;
+  font-size: 28px;
+  text-align: center;
+}
+
 .btn-details {
-  background-color: rgba(255, 250, 255, 0.08);
+  background-color: rgba(255, 255, 255, 0.08);
   color: #fff;
   padding: 12px 16px;
   border-radius: 100px;

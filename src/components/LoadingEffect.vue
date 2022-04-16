@@ -1,10 +1,8 @@
 <template>
-  <Transition>
-    <div class="loader-container">
-      <p>Wait a second...</p>
-      <span class="loader"></span>
-    </div>
-  </Transition>
+  <div class="loader-container">
+    <p>Wait a second...</p>
+    <span class="loader"></span>
+  </div>
 </template>
 
 <script>
@@ -67,8 +65,8 @@ export default {
 
 @media screen and (max-width: 900px) {
   .loader-container {
-    justify-content: left;
-    padding-block: 120px;
+    justify-content: center;
+    position: fixed;
   }
 
   .loader-container p {
