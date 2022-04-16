@@ -37,15 +37,28 @@
       <div class="row">
         <div class="input-group input-group-address">
           <label for="zip">ZIP Code</label>
-          <input
-            type="text"
-            id="zip"
-            maxlength="8"
-            autocomplete="off"
-            placeholder="Type here..."
-            class="input-text"
-            v-model="userData.address.zip"
-          />
+          <div class="row">
+            <input
+              type="text"
+              id="zip"
+              maxlength="8"
+              autocomplete="off"
+              placeholder="Type here..."
+              class="input-text"
+              v-model="userData.address.zip"
+            />
+            <div class="btn-search-zip">
+              <a
+                href="https://buscacepinter.correios.com.br/app/endereco/index.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><i class="fa fa-question"></i
+                ><span class="tooltip animate__animated animate__backInLeft"
+                  >If you don't know you ZIP code then click here!</span
+                ></a
+              >
+            </div>
+          </div>
           <small>
             Tip: Only numbers. <br />
             Type you ZIP Code and it will fill automatically the other
@@ -408,6 +421,7 @@ input {
   padding: 12px;
   font-size: 18px;
   border-radius: 4px;
+  flex-grow: 1;
   outline: none;
   transition: all 150ms;
 }
@@ -476,5 +490,51 @@ input:focus {
   background-color: transparent;
   color: rgba(255, 255, 255, 0.9);
   outline-width: 3px;
+}
+
+.btn-search-zip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  margin-left: 20px;
+  border-radius: 100px;
+  overflow: hidden;
+  background-color: rgb(0, 160, 255);
+  transition: ease 250ms;
+}
+
+.btn-search-zip a {
+  color: rgba(0, 0, 0, 1);
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-search-zip:hover {
+  transform: scale(1.16);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 4px rgb(0, 160, 255);
+}
+
+.btn-search-zip a:hover {
+  color: rgb(0, 160, 255);
+}
+
+.tooltip {
+  position: absolute;
+  display: none;
+}
+
+@media screen and (max-width: 424px) {
+  .btn-search-zip {
+    flex-grow: 1;
+    margin: 12px 26px;
+    padding-block: 8px;
+  }
 }
 </style>
