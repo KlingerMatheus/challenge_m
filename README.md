@@ -6,7 +6,8 @@ https://user-images.githubusercontent.com/50892465/163710123-246032e0-b86a-495b-
  ### Descrição
 ```
 Este projeto foi desenvolvido a partir de um desafio proposto para testar minhas habilidades como Full-Stacker.
-Consiste no desenvolvimento de uma API com integração ao banco de dados, a parte visual do sistema e o consumo de API local e terceirizada(ViaCEP).
+Consiste no desenvolvimento de uma API com integração ao banco de dados, a parte visual do sistema e o consumo de API local 
+e terceirizada(ViaCEP).
 Este sistema possui uma tela de registro de um usuário e outra tela que é possível visualizar todos os usuários cadastrados.
 Foi utilizado um conceito simples para demonstrar minhas proficiências com algumas tecnologias e desenvolver novas habilidades.
 ```
