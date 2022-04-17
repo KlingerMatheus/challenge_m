@@ -20,6 +20,7 @@ Foi utilizado um conceito simples para demonstrar minhas proficiências com algu
 - Vue.js
 - Node.js
 - Express.js
+- Vue Router
 - Axios
 - SQL
 - Animate.css - https://animate.style
@@ -31,6 +32,8 @@ Foi utilizado um conceito simples para demonstrar minhas proficiências com algu
 ```
 - Visual Studio Code
 - MySQL
+- Prettier
+- Eslint
 ```
 ## Instalação do projeto
 
