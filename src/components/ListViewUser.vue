@@ -55,9 +55,7 @@ export default {
   data: () => {
     return {
       selectedUser: {},
-      users: {
-        id: "",
-      },
+      users: {},
       loaderCycle: true,
       modalIsOpen: false,
     };
