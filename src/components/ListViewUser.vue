@@ -43,7 +43,6 @@
     </tr>
   </div>
 </template>
-
 <script>
 import { http } from "../api/config";
 import LoadingEffect from "./LoadingEffect.vue";
